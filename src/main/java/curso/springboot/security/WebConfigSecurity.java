@@ -20,7 +20,9 @@ public class WebConfigSecurity extends WebSecurityConfigurerAdapter{
 	
 	@Override //configura as solicitacoes de acesso por http
 	protected void configure(HttpSecurity http) throws Exception {
-		http.csrf().disable().authorizeRequests().antMatchers(HttpMethod.GET, "/").permitAll()
+		http.csrf().disable().authorizeRequests()
+		.antMatchers(HttpMethod.GET, "/").permitAll()
+		.antMatchers(HttpMethod.GET, "/cadastropessoa").hasAnyRole("ADMIN")
 		.anyRequest().authenticated().and().formLogin().permitAll().and().logout()
 		.logoutRequestMatcher(new AntPathRequestMatcher("/logout"));
 	}
