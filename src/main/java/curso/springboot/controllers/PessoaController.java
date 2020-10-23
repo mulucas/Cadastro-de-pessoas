@@ -20,12 +20,16 @@ import org.springframework.web.servlet.ModelAndView;
 
 import curso.springboot.model.Pessoa;
 import curso.springboot.repository.PessoaRepository;
+import curso.springboot.repository.TelefoneRepository;
 
 @Controller
 public class PessoaController {
 
 	@Autowired
 	private PessoaRepository pessoaRepository;
+	
+	@Autowired
+	TelefoneRepository telefoneRepository;
 
 	private ModelAndView andView = new ModelAndView("cadastro/cadastropessoa");
 
@@ -39,6 +43,8 @@ public class PessoaController {
 	@RequestMapping(method = RequestMethod.POST, value = "**/salvarpessoa")
 	public ModelAndView salvar(@Valid Pessoa pessoa, BindingResult bindingResult) {
 
+		pessoa.setTelefones(telefoneRepository.getTelefones(pessoa.getId()));
+		
 		if (bindingResult.hasErrors()) {
 			Iterable<Pessoa> pessoasIt = pessoaRepository.findAll();
 			andView.addObject("pessoaobj", pessoa);
