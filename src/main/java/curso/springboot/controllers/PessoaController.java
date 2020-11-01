@@ -27,7 +27,7 @@ public class PessoaController {
 
 	@Autowired
 	private PessoaRepository pessoaRepository;
-	
+
 	@Autowired
 	TelefoneRepository telefoneRepository;
 
@@ -44,7 +44,7 @@ public class PessoaController {
 	public ModelAndView salvar(@Valid Pessoa pessoa, BindingResult bindingResult) {
 
 		pessoa.setTelefones(telefoneRepository.getTelefones(pessoa.getId()));
-		
+
 		if (bindingResult.hasErrors()) {
 			Iterable<Pessoa> pessoasIt = pessoaRepository.findAll();
 			andView.addObject("pessoaobj", pessoa);
@@ -95,8 +95,16 @@ public class PessoaController {
 	}
 
 	@PostMapping("**/pesquisarpessoa")
-	public ModelAndView pesquisar(@RequestParam("nomepesquisa") String nomepesquisa) {
-		andView.addObject("pessoas", pessoaRepository.buscarPessoaPorNome(nomepesquisa));
+	public ModelAndView pesquisar(@RequestParam("nomepesquisa") String nomepesquisa,
+			@RequestParam("pesqsexo") String pesqsexo) {
+		List<Pessoa> pessoas = new ArrayList<Pessoa>();
+
+		if (pesqsexo != null && !pesqsexo.isEmpty()) {
+			pessoas = pessoaRepository.buscarPessoaPorNomeSexo(nomepesquisa, pesqsexo);
+		} else {
+			pessoas = pessoaRepository.buscarPessoaPorNome(nomepesquisa);
+		}
+		andView.addObject("pessoas", pessoas);
 		andView.addObject("pessoaobj", new Pessoa());
 		return andView;
 	}
