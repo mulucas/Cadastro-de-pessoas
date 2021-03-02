@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,9 @@ public class PessoaController {
 	@Autowired
 	TelefoneRepository telefoneRepository;
 
+	@Autowired
+	private ReportUtil reportUtil;
+	
 	private ModelAndView andView = new ModelAndView("cadastro/cadastropessoa");
 
 	@RequestMapping(method = RequestMethod.GET, value = "/cadastropessoa")
@@ -94,6 +99,42 @@ public class PessoaController {
 
 	}
 
+	@GetMapping("**/pesquisarpessoa")
+	public void imprimePDF(@RequestParam("nomepesquisa") String nomepesquisa, @RequestParam("pesqsexo") String pesqsexo, 
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+		List<Pessoa> pessoas = new ArrayList<Pessoa>();
+		
+		if (pesqsexo != null && !pesqsexo.isEmpty() && nomepesquisa != null && !nomepesquisa.isEmpty()) {
+			pessoas = pessoaRepository.buscarPessoaPorNomeSexo(nomepesquisa, pesqsexo);
+		}
+		else if(nomepesquisa != null && !nomepesquisa.isEmpty()) {
+			pessoas = pessoaRepository.buscarPessoaPorNome(nomepesquisa);
+		}
+		else if(pesqsexo != null && !pesqsexo.isEmpty()) {
+			pessoas = pessoaRepository.buscarPessoaPorSexo(pesqsexo);
+		}
+		else {
+			Iterable<Pessoa> iterable = pessoaRepository.findAll();
+			
+			for (Pessoa pessoa : iterable) {
+				pessoas.add(pessoa);
+			}
+		}
+		
+		byte[] pdf = reportUtil.gerarRelatorio(pessoas, "pessoa", request.getServletContext());
+		
+		response.setContentLength(pdf.length);
+		
+		response.setContentType("application/octet-stream");
+		
+		String headerKey = "Content-Disposition";
+		String headerValeu = String.format("attachment; filename=\"%s\"", "relatorio.pdf" );
+		response.setHeader(headerKey, headerValeu);
+		
+		response.getOutputStream().write(pdf);
+	}
+	
 	@PostMapping("**/pesquisarpessoa")
 	public ModelAndView pesquisar(@RequestParam("nomepesquisa") String nomepesquisa,
 			@RequestParam("pesqsexo") String pesqsexo) {
