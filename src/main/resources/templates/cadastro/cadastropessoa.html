@@ -13,6 +13,9 @@
 	integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
 	crossorigin="anonymous"></script>
 
+<script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+<link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+
 <!-- Compiled and minified CSS -->
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
@@ -52,7 +55,7 @@ input {
 			<br>
 
 			<form action="salvarpessoa" method="post" th:object="${pessoaobj}"
-				id="formpessoa" class="col s12">
+				id="formpessoa" class="col s12" enctype="multipart/form-data">
 
 				<div class="row">
 					<div class="input-field col s6">
@@ -89,6 +92,18 @@ input {
 					 	<select	class="browser-default" th:field="*{cargo}" id="cargo">
 					 		<option th:each = "c : ${T(curso.springboot.model.Cargo).values()}" th:value = "${c.valor}" th:text = "${c.nome}">
 						</select>
+					</div>
+					<div class="input-field col s6">
+						<label for="dataNascimento" class="active"> Data de Nascimento</label>
+						<input type="date" id="dataNascimento" th:field="*{dataNascimento}"
+							name="dataNascimento" placeholder="Data Nasc.">
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="input-field col s12">
+						<label for="file" class="active">Currículo:</label>
+						<input type="file" id="file" name="file" class="validate">
 					</div>
 				</div>
 				
@@ -225,6 +240,11 @@ input {
 				.ready(
 						function() {
 
+							$('#dataNascimento').datepicker({
+								showOthermonths:true,
+								format: 'yyyy-mm-dd'
+							});
+							
 							function limpa_formulário_cep() {
 								// Limpa valores do formulário de cep.
 								$("#rua").val("");
