@@ -21,7 +21,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import curso.springboot.model.Pessoa;
+import curso.springboot.model.Profissao;
 import curso.springboot.repository.PessoaRepository;
+import curso.springboot.repository.ProfissaoRepository;
 import curso.springboot.repository.TelefoneRepository;
 
 @Controller
@@ -36,11 +38,15 @@ public class PessoaController {
 	@Autowired
 	private ReportUtil reportUtil;
 	
+	@Autowired
+	private ProfissaoRepository profissaoRepository;
+	
 	private ModelAndView andView = new ModelAndView("cadastro/cadastropessoa");
 
 	@RequestMapping(method = RequestMethod.GET, value = "/cadastropessoa")
 	public ModelAndView inicio() {
 		andView.addObject("pessoaobj", new Pessoa());
+		andView.addObject("profissoes", profissaoRepository.findAll());
 		listaPessoas();
 		return andView;
 	}

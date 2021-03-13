@@ -5,9 +5,12 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
@@ -29,27 +32,49 @@ public class Pessoa implements Serializable {
 	@NotEmpty(message = "sobrenome veio vazio")
 	@NotNull(message = "sobrenome veio null")
 	private String sobrenome;
-	
+
 	@Min(value = 18, message = "Idade inválida")
 	private int idade;
-	
+
 	@OneToMany(mappedBy = "pessoa", orphanRemoval = true, cascade = CascadeType.ALL)
 	private List<Telefone> telefones;
-	
+
 	private String cep;
-	
+
 	private String rua;
-	
+
 	private String bairro;
-	
+
 	private String cidade;
-	
+
 	private String uf;
-	
+
 	private String ibge;
-	
+
 	private String sexopessoa;
+
+	@ManyToOne
+	private Profissao profissao;
+
+	@Enumerated(EnumType.STRING)
+	private Cargo cargo;
 	
+	public Cargo getCargo() {
+		return cargo;
+	}
+	
+	public void setCargo(Cargo cargo) {
+		this.cargo = cargo;
+	}
+	
+	public void setProfissao(Profissao profissao) {
+		this.profissao = profissao;
+	}
+
+	public Profissao getProfissao() {
+		return profissao;
+	}
+
 	public List<Telefone> getTelefones() {
 		return telefones;
 	}
@@ -145,5 +170,5 @@ public class Pessoa implements Serializable {
 	public void setSexopessoa(String sexopessoa) {
 		this.sexopessoa = sexopessoa;
 	}
-	
+
 }
