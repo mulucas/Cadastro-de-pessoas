@@ -23,7 +23,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import curso.springboot.model.Pessoa;
-import curso.springboot.model.Profissao;
 import curso.springboot.repository.PessoaRepository;
 import curso.springboot.repository.ProfissaoRepository;
 import curso.springboot.repository.TelefoneRepository;
@@ -120,6 +119,27 @@ public class PessoaController {
 		andView.addObject("pessoaobj", new Pessoa());
 		return andView;
 
+	}
+	
+	@GetMapping("**/baixarcurriculo/{idpessoa}")
+	public void baixarCurriculo(@PathVariable("idpessoa") Long idpessoa,
+			HttpServletResponse response) throws IOException {
+		
+		Pessoa pessoa = pessoaRepository.findById(idpessoa).get();
+		
+		if (pessoa.getCurriculo() != null) {
+			
+			response.setContentLength(pessoa.getCurriculo().length);
+			
+			response.setContentType(pessoa.getTipoFileCurriculo());
+			
+			String headerKey = "Content-Disposition";
+			String headerValue = String.format("attachment; filename=\"%s\"", pessoa.getNomeFileCurriculo());
+			
+			response.setHeader(headerKey, headerValue);
+			response.getOutputStream().write(pessoa.getCurriculo());
+			
+		}
 	}
 
 	@GetMapping("**/pesquisarpessoa")
