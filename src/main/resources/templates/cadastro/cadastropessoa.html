@@ -186,40 +186,42 @@ table th {
 		</div>
 	</fieldset>
 	<br />
-	<fieldset>
-		<legend> Campos de pesquisa</legend>
 		<div class="row">
-			<form action="pesquisarpessoa" method="post" class="col s12" id="pesquisarpessoa">
+			<form action="pesquisarpessoa" method="post" class="col s12" id="pesquisarpessoa" th:object="${pessoaobj}">
 				<div class="row">
-					<div class="input-field col s6">
-						<label for="nomepesquisa" class="active">Pesquisa por
-							nome:</label> <input name="nomepesquisa" id="nomepesquisa"
-							class="validate" th:value="${nomepesquisa}">
-					</div>
-					<div class="input-field col s6">
-						<label for="pesqsexo" class="active">Pesquisa sexo</label> 
-						<select
-							class="browser-default" name="pesqsexo" id="pesqsexo">
-							<option value="">--Todos--</option>
-							<option value="MASCULINO" th:text="Masculino" />
-							<option value="FEMININO" th:text="Feminino" />
-						</select>
-					</div>
+					<fieldset>
+						<legend> Campos de pesquisa</legend>
+						<div class="input-field col s6">
+							<label for="nomepesquisa" class="active">Pesquisa por
+								nome:</label> <input name="nomepesquisa" id="nomepesquisa"
+								class="validate" th:value="${nomepesquisa}">
+						</div>
+						<div class="input-field col s6">
+							<label for="pesqsexo" class="active">Pesquisa sexo</label> 
+							<select
+								class="browser-default" name="pesqsexo" id="pesqsexo">
+								<option value="">--Todos--</option>
+								<option value="MASCULINO" th:text="Masculino" />
+								<option value="FEMININO" th:text="Feminino" />
+							</select>
+						</div>
+						<div class="input-field col s12">
+							<input type="submit" value="Buscar"
+								class="waves-effect waves-light btn">
+						</div>
+					</fieldset>
+		
 					<div class="input-field col s12">
 						<input type="submit" value="PDF" onclick="document.getElementById('pesquisarpessoa').method = 'get'"
 							class="waves-effect waves-light btn">
-						<input type="submit" value="Buscar"
-							class="waves-effect waves-light btn"> <a
-							class="waves-effect waves-light btn" href="/listapessoas">Lista
+							<a class="waves-effect waves-light btn" href="/listapessoas">Lista
 							Pessoas</a>
 
 					</div>
 				</div>
 			</form>
 		</div>
-	</fieldset>
-	<br />
-	<br />
+
 
 	<table class="highlight">
 		<thead>
